@@ -55,3 +55,31 @@ For example,
 ```bash
 man 2 write
 ```
+
+## Reverse Engineering
+
+To view hexadecimal dump of a program file, you can use `xxd` utility.
+
+```bash
+xxd program
+```
+
+If you wish to see all the strings presents in a program file, you can use `strings` utility.
+
+```bash
+strings program
+```
+
+For Linux (elf) program, you can also use `readelf` utility. This though doesn't reveal the entire information if you're planning to reverse engineer.
+
+```bash
+readelf -a program
+```
+
+Lastly, there's also `objdump` utility. Please note that the result it provides uses GNU style of assembly while the programs contained in this repo use NASM.
+
+```bash
+objdump -d program
+```
+
+The major difference between GAS and NASM syntax is that NASM tries to be more readable with `mov eax, 1` (Set eax to 1), while GAS uses a style closer to actual machine code which is similar to `mov $0x1, %eax` (Put 1 into eax).
