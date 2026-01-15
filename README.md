@@ -49,3 +49,9 @@ For details on a specific syscall and its C interface,
 ```bash
 man 2 <function_name>
 ```
+
+For example,
+
+```bash
+man 2 write
+```
