@@ -36,6 +36,8 @@ cat /usr/include/x86_64-linux-gnu/asm/unistd_64.h
 cat /usr/include/asm/unistd_32.h
 ```
 
+Please note that the numbers don't match between two architectures. RAX has to be set to 1 in case of x86-64 to print to the terminal, but EAX has to be set to 4 in case of x86 to print to the terminal.
+
 ## Manual Pages
 
 For general system call documentation and architecture-specific information,
