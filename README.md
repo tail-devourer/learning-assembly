@@ -2,6 +2,8 @@
 
 ## Setup Instructions
 
+The following instructions enables assembling and linking both 32-bit and 64-bit programs on Ubuntu.
+
 ```bash
 sudo dpkg --add-architecture i386
 sudo apt update
@@ -26,62 +28,70 @@ ld program.o -o program -m elf_i386
 
 ## System Call References
 
-System call numbers are defined in architecture-specific `unistd` headers installed with *libc*.
+System call numbers are architecture-specific and defined in the kernel ABI headers installed with *libc*.
+
+For x86-64:
 
 ```bash
 cat /usr/include/x86_64-linux-gnu/asm/unistd_64.h
 ```
 
+For x86:
+
 ```bash
 cat /usr/include/asm/unistd_32.h
 ```
 
-Please note that the numbers don't match between two architectures. RAX has to be set to 1 in case of x86-64 to print to the terminal, but EAX has to be set to 4 in case of x86 to print to the terminal.
+System call numbers do not match between architectures. For example, the `write` syscall uses `RAX = 1` on x86-64 and `EAX = 4` on x86. Arguments are also passed differently between the two ABIs.
 
 ## Manual Pages
 
-For general system call documentation and architecture-specific information,
+For general information on the syscall interface:
 
 ```bash
 man syscall
 ```
 
-For details on a specific syscall and its C interface,
+For details on a specific syscall and its C interface:
 
 ```bash
 man 2 <function_name>
 ```
 
-For example,
+Example:
 
 ```bash
 man 2 write
 ```
 
-## Reverse Engineering
+Note that the C interface may differ from direct syscall usage.
 
-To view hexadecimal dump of a program file, you can use `xxd` utility.
+## Reverse Engineering and Inspection
+
+To view hexadecimal dump of a binary:
 
 ```bash
 xxd program
 ```
 
-If you wish to see all the strings presents in a program file, you can use `strings` utility.
+To extract printable strings from a binary:
 
 ```bash
 strings program
 ```
 
-For Linux (elf) program, you can also use `readelf` utility. This though doesn't reveal the entire information if you're planning to reverse engineer.
+For inspecting ELF binaries:
 
 ```bash
 readelf -a program
 ```
 
-Lastly, there's also `objdump` utility. Please note that the result it provides uses GNU style of assembly while the programs contained in this repo use NASM.
+The above provides structural information but is not sufficient for full reverse engineering.
+
+To disassemble a binary:
 
 ```bash
 objdump -d program
 ```
 
-The major difference between GAS and NASM syntax is that NASM tries to be more readable with `mov eax, 1` (Set eax to 1), while GAS uses a style closer to actual machine code which is similar to `mov $0x1, %eax` (Put 1 into eax).
+`objdump` outputs GNU (GAS) style assembly. The source files in this repository use NASM syntax instead. The main syntactic difference is operand order and notation. For example, `mov eax, 1` (NASM) vs `mov $0x1, %eax` (GAS).
